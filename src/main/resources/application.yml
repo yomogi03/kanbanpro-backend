@@ -4,3 +4,9 @@ spring:
     username: kanbanuser
     password: kanbanpass
     driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
