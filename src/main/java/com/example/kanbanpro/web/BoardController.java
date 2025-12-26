@@ -1,6 +1,6 @@
 package com.example.kanbanpro.web;
 
-import com.example.kanbanpro.domain.Board;
+import com.example.kanbanpro.service.BoardService;
 import com.example.kanbanpro.repository.BoardRepository;
 import com.example.kanbanpro.web.dto.BoardResponse;
 import com.example.kanbanpro.web.dto.CreateBoardRequest;
@@ -19,26 +19,20 @@ import java.util.List;
 @RequestMapping("/api/boards")
 public class BoardController {
 
-    private final BoardRepository boardRepository;
+    private final BoardService boardService;
 
-    public BoardController(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
+    public BoardController(BoardService boardService) {
+        this.boardService = boardService;
     }
 
     @GetMapping
     public List<BoardResponse> getBoards() {
-        return boardRepository.findAll().stream()
-                .map(b -> new BoardResponse(b.getId(), b.getName(), b.getRegistDate(), b.getUpdateDate()))
-                .toList();
+        return boardService.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BoardResponse createBoard(@Valid @RequestBody CreateBoardRequest request) {
-        Board board = new Board();
-        board.setName(request.name());
-
-        Board saved = boardRepository.save(board);
-        return new BoardResponse(saved.getId(), saved.getName(), saved.getRegistDate(), saved.getUpdateDate());
+        return boardService.create(request.name());
     }
 }
